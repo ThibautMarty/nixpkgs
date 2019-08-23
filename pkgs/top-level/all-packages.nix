@@ -10798,6 +10798,10 @@ in
 
   gdcm = callPackage ../development/libraries/gdcm { };
 
+  gg = callPackage ../development/tools/gg {
+    stdenv = gcc7Stdenv; # Needs specifically gcc 7
+  };
+
   ggz_base_libs = callPackage ../development/libraries/ggz_base_libs {};
 
   giblib = callPackage ../development/libraries/giblib { };
