@@ -17,11 +17,10 @@ stdenv.mkDerivation rec {
     (stdenv.lib.optional stdenv.hostPlatform.isDarwin ./GNUmakefile-darwin.patch)
   ];
 
-
   configurePhase = ''
-      sed -i GNUmakefile \
-        -e 's|-march=native|-fPIC|g' \
-        -e '/^CXXFLAGS =/s|-g ||'
+    sed -i GNUmakefile \
+      -e 's|-march=native|-fPIC|g' \
+      -e '/^CXXFLAGS =/s|-g ||'
   '';
 
   enableParallelBuilding = true;
@@ -33,9 +32,9 @@ stdenv.mkDerivation rec {
   doCheck = true;
   checkPhase = "LD_LIBRARY_PATH=`pwd` make test";
 
-  # prefer -fPIC and .so to .a; cryptotest.exe seems superfluous
+  # cryptotest.exe seems superfluous
   postInstall = ''
-    rm "$out"/lib/*.a -r "$out/bin"
+    rm -r "$out/bin"
     ln -sf "$out"/lib/libcryptopp.so.${version} "$out"/lib/libcryptopp.so.${majorVersion}
   '';
 
