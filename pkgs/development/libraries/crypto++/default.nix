@@ -33,10 +33,13 @@ stdenv.mkDerivation rec {
   checkPhase = "LD_LIBRARY_PATH=`pwd` make test";
 
   # cryptotest.exe seems superfluous
+  # some programs can look for headers in include/crypto++ instead of include/cryptopp
   # add pkg-config file (taken from Archlinux)
   postInstall = ''
     rm -r "$out/bin"
     ln -sf "$out"/lib/libcryptopp.so.${version} "$out"/lib/libcryptopp.so.${majorVersion}
+
+    ln -s cryptopp $out/include/crypto++
 
     mkdir -p $out/lib/pkgconfig
     cp ${./libcrypto++.pc} $out/lib/pkgconfig/libcrypto++.pc
