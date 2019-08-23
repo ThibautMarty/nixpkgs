@@ -33,9 +33,16 @@ stdenv.mkDerivation rec {
   checkPhase = "LD_LIBRARY_PATH=`pwd` make test";
 
   # cryptotest.exe seems superfluous
+  # add pkg-config file (taken from Archlinux)
   postInstall = ''
     rm -r "$out/bin"
     ln -sf "$out"/lib/libcryptopp.so.${version} "$out"/lib/libcryptopp.so.${majorVersion}
+
+    mkdir -p $out/lib/pkgconfig
+    cp ${./libcrypto++.pc} $out/lib/pkgconfig/libcrypto++.pc
+    substituteInPlace $out/lib/pkgconfig/libcrypto++.pc \
+      --subst-var-by out $out \
+      --subst-var-by version "${version}"
   '';
 
   meta = with stdenv.lib; {
